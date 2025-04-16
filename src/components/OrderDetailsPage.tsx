@@ -18,7 +18,7 @@ const OrderDetailsPage = () => {
     const fetchOrderDetails = async () => {
 
       try {
-        const response = await api.get(`/controlTower/orders/${orderId}`);
+        const response = await api.get(`/orders/${orderId}`);
         const data = response.data.data;
 
         setOrder(processSingleOrder(data));

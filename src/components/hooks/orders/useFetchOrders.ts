@@ -12,7 +12,7 @@ export const useFetchOrders = () => {
 
     const fetchOrders = async () => {
       try {
-        const res = await api.get("/controlTower/orders");
+        const res = await api.get("/orders");
         const data = res.data.data;
         setOrders(processOrders(data));
 

@@ -32,7 +32,7 @@ const UpdateOrderStatus: React.FC<Props> = ({ orderId, currentStatus }) => {
     const handleUpdateStatus = async () => {
         setLoading(true);
         try {
-            const res = await api.put(`/controlTower/orders/${orderId}`, {
+            const res = await api.put(`/orders/${orderId}`, {
                 orderStatusId: status,
             });
 
