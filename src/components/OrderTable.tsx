@@ -5,7 +5,7 @@ import {
     Badge, Box, Text, Input, Select, Flex, Button,
   } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { OrderStatus, ProcessedOrder } from "@/interfaces/orders.interface";
+import { OrderStatus, PaginatedOrder } from "@/interfaces/orders.interface";
 import { formatDateTime } from "@/utils/manipulate-time.util";
 import TimeSpentComponent from "./OrderTimeComponents/TimeSpentComponent";
 import OverallElapsedTimeComponent from "./OrderTimeComponents/OverallElapsedTimeComponent";
@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { StatusColor } from "@/constants/orders.constants";
   
 interface OrderTableProps {
-    orders: ProcessedOrder[];
+    orders: PaginatedOrder
 }
   
 const ITEMS_PER_PAGE = 10;
@@ -29,19 +29,21 @@ const OrderTable = ({ orders }: OrderTableProps) => {
     };
 
     const filteredOrders = useMemo(() => {
-
-      return orders
+      return orders.data
         .filter((order) =>
-          [order.order_id, order.orderName, order.storeName]
+          [order.id, order.orderName, order.storeName]
             .some((field) =>
               field?.toString().toLowerCase().includes(searchTerm.toLowerCase())
             )
         )
         .filter((order) =>
-          statusFilter ? order.code_name === statusFilter : true
+          statusFilter ? order.bitmarteOrderStatus.code_name === statusFilter : true
         );
     }, [orders, searchTerm, statusFilter]);
   
+    console.log({
+      filteredOrders
+    })
     const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
     const paginatedOrders = filteredOrders.slice(
       (page - 1) * ITEMS_PER_PAGE,
@@ -108,25 +110,25 @@ const OrderTable = ({ orders }: OrderTableProps) => {
                 </Tr>
               ) : (
                 paginatedOrders.map((order) => (
-                  <Tr key={order.order_id} onClick={() => handleRowClick(String(order.order_id))} style={{ cursor: 'pointer' }}>
-                    <Td>{order.order_id}</Td>
+                  <Tr key={order.id} onClick={() => handleRowClick(String(order.id))} style={{ cursor: 'pointer' }}>
+                    <Td>{order.id}</Td>
                     <Td>{order.orderName}</Td>
                     <Td>{order.storeName}</Td>
-                    <Td>{order?.shippingLocation?.state || "N/A"}</Td>
-                    <Td>{order.orderLocation}</Td>
-                    <Td>{order.address}</Td>
-                    <Td>{formatDateTime(order.timeorderplaced)}</Td>
+                    <Td>{order?.merchant?.store?.shippingLocation?.state || "N/A"}</Td>
+                    <Td>{order?.merchant?.store?.shippingLocation?.street || "N/A"}</Td>
+                    <Td>{order.customer?.customerShippingAddresses[0]?.address || "N/A"}</Td>
+                    <Td>{formatDateTime(order.createdAt)}</Td>
                     <Td>
-                      <Badge colorScheme={StatusColor[order.code_name as OrderStatus]}>
-                        {order.code_name}
+                      <Badge colorScheme={StatusColor[order.bitmarteOrderStatus.code_name as OrderStatus]}>
+                        {order.bitmarteOrderStatus.code_name}
                       </Badge>
                     </Td>
                     <TimeSpentComponent
-                      timeSpent={order.timeSpent}
+                      timeSpent={order.timeSpent!}
                       flagColor={order.flagColor!}
                     />
                     <OverallElapsedTimeComponent
-                      overallElapsedTime={order.overallElapsedTime}
+                      overallElapsedTime={order.overallElapsedTime!}
                       orderCompletionThreshold={order.orderCompletionThreshold!}
                     />
                   </Tr>

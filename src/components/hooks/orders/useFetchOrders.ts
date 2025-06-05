@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "@/utils/api.util";
-import { ProcessedOrder } from "@/interfaces/orders.interface";
+import { PaginatedOrder } from "@/interfaces/orders.interface";
 import { processOrders } from "@/utils/process-order.util";
 
 export const useFetchOrders = () => {
-  const [orders, setOrders] = useState<ProcessedOrder[]>([]);
+  const [orders, setOrders] = useState<PaginatedOrder>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,11 +13,11 @@ export const useFetchOrders = () => {
     const fetchOrders = async () => {
       try {
         const res = await api.get("/orders");
-        const data = res.data.data;
+        const data = res.data.data as PaginatedOrder;
         setOrders(processOrders(data));
 
         intervalId = setInterval(() => {
-          setOrders((prevOrders) => processOrders(prevOrders));
+          setOrders((prevOrders) => processOrders(prevOrders!));
         }, 1000);
       } catch (err) {
         console.error("Failed to fetch orders", err);

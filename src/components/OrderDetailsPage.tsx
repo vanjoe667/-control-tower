@@ -2,7 +2,7 @@ import { Box, Flex, Text, Badge, Stack, useToast } from "@chakra-ui/react";
 import { OrderTimeComponent } from "./OrderTimeComponents/OrderTimeComponent";
 import TimeSpentComponent  from "./OrderTimeComponents/TimeSpentComponent";
 import OverallElapsedTimeComponent from "./OrderTimeComponents/OverallElapsedTimeComponent";
-import { OrderStatus, ProcessedOrder } from "@/interfaces/orders.interface";
+import { Order, OrderStatus } from "@/interfaces/orders.interface";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "@/utils/api.util";
@@ -11,14 +11,14 @@ import { StatusColor } from "@/constants/orders.constants";
 
 const OrderDetailsPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const [order, setOrder] = useState<ProcessedOrder | null>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const toast = useToast();
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await api.get(`/orders/${orderId}`);
-        const data = response.data.data;
+        const data = response.data.data as Order;
 
         setOrder(processSingleOrder(data));
         const intervalId = setInterval(() => {
@@ -66,8 +66,8 @@ const OrderDetailsPage = () => {
             {order.firstName} {order.lastName}
           </Text>
         </Box>
-        <Badge colorScheme={StatusColor[order.code_name as OrderStatus]}>
-          {order.code_name}
+        <Badge colorScheme={StatusColor[order.bitmarteOrderStatus.code_name as OrderStatus]}>
+          {order.bitmarteOrderStatus.code_name}
         </Badge>
       </Flex>
 
@@ -77,15 +77,15 @@ const OrderDetailsPage = () => {
 
       <Flex direction={{ base: "column", md: "row" }} gap={4} align="center" justify="space-between">
         <Stack direction="row" gap={6} wrap="wrap">
-          <OrderTimeComponent orderPlacedTime={order.timeorderplaced} />
+          <OrderTimeComponent orderPlacedTime={order.createdAt} />
           <TimeSpentComponent 
-            timeSpent={order.timeSpent}
+            timeSpent={order.timeSpent!}
             flagColor={order.flagColor!}
             isTable={false}
            />
 
           <OverallElapsedTimeComponent
-            overallElapsedTime={order.overallElapsedTime}
+            overallElapsedTime={order.overallElapsedTime!}
             orderCompletionThreshold={order.orderCompletionThreshold!}
             isTable={false}
           />

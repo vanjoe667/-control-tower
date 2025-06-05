@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import socket from "@/utils/socket.util";
 import { SocketChannels } from "@/constants/socket.constants";
-import { ProcessedOrder } from "@/interfaces/orders.interface";
+import { PaginatedOrder } from "@/interfaces/orders.interface";
 
 export const useOrderStatusSocket = (
-  setOrders: React.Dispatch<React.SetStateAction<ProcessedOrder[]>>
+  setOrders: React.Dispatch<React.SetStateAction<PaginatedOrder | undefined>>
 ) => {
   useEffect(() => {
     socket.connect();
@@ -15,13 +15,24 @@ export const useOrderStatusSocket = (
     });
 
     socket.on(SocketChannels.controlTower.events.onOrderStatusUpdate, ({ updatedOrder }) => {
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.order_id === updatedOrder.order_id
-            ? { ...order, code_name: updatedOrder.code_name }
-            : order
-        )
-      );
+        setOrders((prevOrders) => {
+        if (!prevOrders) return prevOrders;
+
+        return {
+          ...prevOrders,
+          data: prevOrders.data.map((order) =>
+            order.id === updatedOrder.id
+              ? {
+                  ...order,
+                  bitmarteOrderStatus: {
+                    ...order.bitmarteOrderStatus,
+                    code_name: updatedOrder.bitmarteOrderStatus.code_name,
+                  },
+                }
+              : order
+          ),
+        };
+      });
     });
 
     return () => {

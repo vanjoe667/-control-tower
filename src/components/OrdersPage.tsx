@@ -19,7 +19,7 @@ const OrdersPage = () => {
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
         Orders
       </Text>
-      <OrderTable orders={orders} />
+      <OrderTable orders={orders!} />
     </div>
   );
 };

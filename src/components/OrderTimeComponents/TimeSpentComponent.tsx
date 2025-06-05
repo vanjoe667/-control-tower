@@ -10,6 +10,7 @@ interface TimeSpentProps {
 
 const TimeSpentComponent: React.FC<TimeSpentProps> = ({ timeSpent, flagColor, isTable = true }) => {
     // Convert total seconds into days, hours, minutes, and seconds
+    console.log({timeSpent, flagColor, isTable})
     const days = Math.floor(timeSpent / (60 * 60 * 24));
     const hours = Math.floor((timeSpent % (60 * 60 * 24)) / (60 * 60));
     const minutes = Math.floor((timeSpent % (60 * 60)) / 60);

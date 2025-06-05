@@ -1,11 +1,11 @@
-import { Order, ProcessedOrder } from "@/interfaces/orders.interface";
+import { Order, PaginatedOrder} from "@/interfaces/orders.interface";
 
-export function processOrders(prevOrders: Order[]): ProcessedOrder[] {
+export function processOrders(prevOrders: PaginatedOrder): PaginatedOrder {
     const now = Date.now();
   
-    return prevOrders.map((order) => {
-      const timeChangedMs = new Date(order.timechanged).getTime();
-      const timePlacedMs = new Date(order.timeorderplaced).getTime();
+    const formattedOrders =  prevOrders.data.map((order) => {
+      const timeChangedMs = new Date(order.updatedAt).getTime();
+      const timePlacedMs = new Date(order.createdAt).getTime();
       const threshold = order.thresholdSeconds ?? 180;
       const orderCompletionThreshold = order.orderCompletionThreshold ?? 180;
   
@@ -38,13 +38,18 @@ export function processOrders(prevOrders: Order[]): ProcessedOrder[] {
         flagColor,
       };
     });
+
+    return {
+      ...prevOrders,
+      data: formattedOrders
+    }
 }
 
-export function processSingleOrder(order: Order): ProcessedOrder {
+export function processSingleOrder(order: Order): Order {
     const now = Date.now();
   
-      const timeChangedMs = new Date(order.timechanged).getTime();
-      const timePlacedMs = new Date(order.timeorderplaced).getTime();
+      const timeChangedMs = new Date(order.updatedAt).getTime();
+      const timePlacedMs = new Date(order.createdAt).getTime();
       const threshold = order.thresholdSeconds ?? 180;
       const orderCompletionThreshold = order.orderCompletionThreshold ?? 180;
 
