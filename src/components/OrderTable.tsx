@@ -15,8 +15,6 @@ import { StatusColor } from "@/constants/orders.constants";
 interface OrderTableProps {
     orders: PaginatedOrder
 }
-  
-const ITEMS_PER_PAGE = 10;
 
 const OrderTable = ({ orders }: OrderTableProps) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -28,7 +26,7 @@ const OrderTable = ({ orders }: OrderTableProps) => {
         navigate(`/order/${orderId}`);
     };
 
-    const filteredOrders = useMemo(() => {
+    useMemo(() => {
       return orders.data
         .filter((order) =>
           [order.id, order.orderName, order.storeName]
@@ -41,14 +39,7 @@ const OrderTable = ({ orders }: OrderTableProps) => {
         );
     }, [orders, searchTerm, statusFilter]);
   
-    console.log({
-      filteredOrders
-    })
-    const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
-    const paginatedOrders = filteredOrders.slice(
-      (page - 1) * ITEMS_PER_PAGE,
-      page * ITEMS_PER_PAGE
-    );
+    const totalPages = orders.totalPages
   
     return (
       <Box>
@@ -100,7 +91,7 @@ const OrderTable = ({ orders }: OrderTableProps) => {
               </Tr>
             </Thead>
             <Tbody>
-              {paginatedOrders.length === 0 ? (
+              {orders.data.length === 0 ? (
                 <Tr>
                   <Td colSpan={10}>
                     <Text textAlign="center" py="4" color="gray.500">
@@ -109,7 +100,7 @@ const OrderTable = ({ orders }: OrderTableProps) => {
                   </Td>
                 </Tr>
               ) : (
-                paginatedOrders.map((order) => (
+                orders.data.map((order) => (
                   <Tr key={order.id} onClick={() => handleRowClick(String(order.id))} style={{ cursor: 'pointer' }}>
                     <Td>{order.id}</Td>
                     <Td>{order.orderName}</Td>
