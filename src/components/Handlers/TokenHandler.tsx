@@ -6,16 +6,16 @@ const TokenHandler = () => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const token = queryParams.get("token");
+    const tokenFromURL = queryParams.get("token");
 
-    if (token) {
-      localStorage.setItem("token", token);
+    if (tokenFromURL) {
+      localStorage.setItem("token", tokenFromURL);
     }
 
-    const savedToken = localStorage.getItem("token");
-    if (!savedToken) {
-      // window.location.href =
-      //   "https://bitmarte-frontend-git-staging-devcbits-projects.vercel.app/admin/login";
+    const token = localStorage.getItem("token");
+
+    if (!token || isTokenExpired(token)) {
+      window.location.href = "https://bitmarte-frontend-git-staging-devcbits-projects.vercel.app/admin/login";
     }
   }, [location.search]);
 
@@ -23,3 +23,16 @@ const TokenHandler = () => {
 };
 
 export default TokenHandler;
+
+function isTokenExpired(token: string): boolean {
+  try {
+    const payloadBase64 = token.split(".")[1];
+    const decodedPayload = JSON.parse(atob(payloadBase64));
+    const exp = decodedPayload.exp;
+    const now = Math.floor(Date.now() / 1000);
+
+    return exp < now;
+  } catch (error) {
+    return true;
+  }
+}
