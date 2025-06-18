@@ -2,7 +2,6 @@ import {
   Flex,
   Heading,
   Spacer,
-  Avatar,
   Icon,
   HStack,
   Menu,
