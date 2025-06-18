@@ -20,7 +20,7 @@ export const useFetchOrders = () => {
         intervalId = setInterval(() => {
           setOrders((prevOrders) => processOrders(prevOrders!));
         }, 1000);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to fetch orders", err);
         setError("Failed to load orders. Please try again.");
       } finally {

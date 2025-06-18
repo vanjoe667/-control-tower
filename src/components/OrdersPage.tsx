@@ -1,4 +1,4 @@
-import { Spinner, Center, Text, Alert, AlertIcon, Box } from "@chakra-ui/react";
+import { Spinner, Center, Text, Box } from "@chakra-ui/react";
 import OrderTable from "@/components/OrderTable";
 import { useFetchOrders, useOrderStatusSocket } from "./hooks";
 import ErrorMessage from "./Error";
@@ -23,7 +23,7 @@ const OrdersPage = () => {
     );
   }
 
-  if (!orders || !orders.data?.length) {
+  if (!(orders?.data?.length)) {
     return (
       <Center h="100vh">
         <Text>No orders found.</Text>
