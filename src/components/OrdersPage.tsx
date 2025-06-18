@@ -1,6 +1,7 @@
 import { Spinner, Center, Text, Alert, AlertIcon, Box } from "@chakra-ui/react";
 import OrderTable from "@/components/OrderTable";
 import { useFetchOrders, useOrderStatusSocket } from "./hooks";
+import ErrorMessage from "./Error";
 
 const OrdersPage = () => {
   const { orders, setOrders, loading, error } = useFetchOrders();
@@ -16,12 +17,8 @@ const OrdersPage = () => {
 
   if (error) {
     return (
-      <Center h="100vh" flexDirection="column">
-        <Alert status="error" mb={4}>
-          <AlertIcon />
-          {error}
-        </Alert>
-        <Text>Please refresh the page or contact support.</Text>
+      <Center h="80vh" flexDirection="column">
+        <ErrorMessage />
       </Center>
     );
   }
