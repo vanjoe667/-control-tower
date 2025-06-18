@@ -18,8 +18,8 @@ const App = () => {
       <TokenHandler />
       <Dashboard>
         <Routes>
-          <Route path="/order" element={<OrdersPage />} />
-          <Route path="/order/:orderId" element={<OrderDetailsPage />} />
+          <Route path="/" element={<OrdersPage />} />
+          <Route path="/orders/:orderId" element={<OrderDetailsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Dashboard>
