@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { FaBinoculars, FaSignOutAlt } from "react-icons/fa";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import logo from "../assets/react.svg";
 
 const Header = () => {
   return (
@@ -43,7 +42,7 @@ const Header = () => {
           p={0}
           _hover={{ bg: "transparent" }}
         >
-          <Avatar size="sm" name="John Doe" src={logo} />
+          {/* <Avatar size="sm" name="John Doe" src={logo} /> */}
         </MenuButton>
         <MenuList>
         <MenuItem
