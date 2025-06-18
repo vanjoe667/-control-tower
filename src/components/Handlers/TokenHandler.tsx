@@ -1,23 +1,23 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TokenHandler = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const tokenFromURL = queryParams.get("token");
-
+    
     if (tokenFromURL) {
-      localStorage.setItem("token", tokenFromURL);
+      if (!isTokenExpired(tokenFromURL)) {
+        localStorage.setItem("token", tokenFromURL);
+        navigate("/order");
+      } else {
+        redirectToLogin();
+      }
     }
-
-    const token = localStorage.getItem("token");
-
-    if (!token || isTokenExpired(token)) {
-      window.location.href = "https://bitmarte-frontend-git-staging-devcbits-projects.vercel.app/admin/login";
-    }
-  }, [location.search]);
+  }, [location.search, navigate]);
 
   return null;
 };
@@ -31,8 +31,15 @@ function isTokenExpired(token: string): boolean {
     const exp = decodedPayload.exp;
     const now = Math.floor(Date.now() / 1000);
 
+    console.log("TOKEN EXPIRATION", exp, now, payloadBase64, decodedPayload, exp < now);
+
     return exp < now;
   } catch (error) {
     return true;
   }
+}
+
+function redirectToLogin() {
+  window.location.href =
+    "https://bitmarte-frontend-git-staging-devcbits-projects.vercel.app/admin/login";
 }

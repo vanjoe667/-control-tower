@@ -6,6 +6,7 @@ import { processOrders } from "@/utils/process-order.util";
 export const useFetchOrders = () => {
   const [orders, setOrders] = useState<PaginatedOrder>();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -19,8 +20,9 @@ export const useFetchOrders = () => {
         intervalId = setInterval(() => {
           setOrders((prevOrders) => processOrders(prevOrders!));
         }, 1000);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to fetch orders", err);
+        setError("Failed to load orders. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -31,5 +33,5 @@ export const useFetchOrders = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  return { orders, setOrders, loading };
+  return { orders, setOrders, loading, error };
 };

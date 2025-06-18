@@ -4,7 +4,7 @@ import { FaBoxOpen } from "react-icons/fa";
 
 const Sidebar = () => {
   const location = useLocation();
-  const isActive = location.pathname === "/";
+  const isActive = location.pathname === "/order";
   return (
     <Box
       as="nav"

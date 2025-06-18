@@ -27,7 +27,7 @@ const OrderTable = ({ orders }: OrderTableProps) => {
     };
 
     useMemo(() => {
-      return orders.data
+      return orders?.data
         .filter((order) =>
           [order.id, order.orderName, order.storeName]
             .some((field) =>
