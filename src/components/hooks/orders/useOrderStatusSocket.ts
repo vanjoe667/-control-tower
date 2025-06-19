@@ -10,7 +10,6 @@ export const useOrderStatusSocket = (
     socket.connect();
 
     socket.on("connect", () => {
-      console.log("Socket connected to control-tower");
       socket.emit("join", SocketChannels.controlTower.channel);
     });
 

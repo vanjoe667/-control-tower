@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
  
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,11 +13,9 @@ const TokenHandler = () => {
     
     if (tokenFromURL) {
       if (!isTokenExpired(tokenFromURL)) {
-        console.log("Token is valid, storing in localStorage");
         localStorage.setItem("token", tokenFromURL);
         navigate("/");
       } else {
-        console.log("Token is expired, redirecting to login");
         redirectToLogin();
       }
     }
@@ -35,8 +34,8 @@ function isTokenExpired(token: string): boolean {
     const now = Math.floor(Date.now() / 1000);
 
     return exp < now;
-  } catch (error) {
-    console.error("Error decoding token:", error);
+  } catch (error: any) {
+    console.error("Error decoding token:", error?.response?.message);
     return true;
   }
 }

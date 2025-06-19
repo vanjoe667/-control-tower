@@ -23,7 +23,7 @@ const OrderTable = ({ orders }: OrderTableProps) => {
   
     const navigate = useNavigate();
     const handleRowClick = (orderId: string) => {
-        navigate(`/order/${orderId}`);
+        navigate(`/orders/${orderId}`);
     };
 
     useMemo(() => {
